@@ -1,0 +1,22 @@
+name: 'Peter Redmond'
+description: ''
+author: 'cko-prism'
+inputs:
+  JIRA_HOST:
+    required: true
+    description: 'JIRA host eg (https://checkout.atlassian.net)'
+  JIRA_API_TOKEN:
+    required: true
+    description: 'JIRA API token'
+  JIRA_BOARD_ID:
+    required: true
+    description: 'ID of the board you want to add the JIRA ticket too'
+  JIRA_PROJECT_KEY:
+    required: true
+    description: 'Key of the project you want to add the jira ticket to eg PRISM'
+  GITHUB_TOKEN:
+    required: true
+    description: ''
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
