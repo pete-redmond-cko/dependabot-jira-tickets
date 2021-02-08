@@ -146,8 +146,10 @@ export const createJiraApiInstance = (host: string, token: string) => {
       )
 
       return response.data.key
-    } catch (e) {
-      core.debug(e)
+    } catch (error) {
+      core.debug(error.response?.data)
+      core.debug(error.response?.status)
+      core.debug(error.response?.headers)
     }
   }
 

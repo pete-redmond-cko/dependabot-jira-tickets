@@ -165,14 +165,17 @@ const createJiraApiInstance = (host, token) => {
     });
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const createTicket = (params) => __awaiter(void 0, void 0, void 0, function* () {
+        var _b, _c, _d;
         const payload = createTicketPayload(params);
         core.debug(`Creating ticket: ${JSON.stringify(payload, null, 2)}`);
         try {
             const response = yield post(`${host}/rest/api/3/issue`, payload);
             return response.data.key;
         }
-        catch (e) {
-            core.debug(e);
+        catch (error) {
+            core.debug((_b = error.response) === null || _b === void 0 ? void 0 : _b.data);
+            core.debug((_c = error.response) === null || _c === void 0 ? void 0 : _c.status);
+            core.debug((_d = error.response) === null || _d === void 0 ? void 0 : _d.headers);
         }
     });
     return {
