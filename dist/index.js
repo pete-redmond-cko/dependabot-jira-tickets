@@ -46,6 +46,25 @@ exports.getPullReqestDetails = getPullReqestDetails;
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -61,6 +80,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createJiraApiInstance = void 0;
 const axios_1 = __importDefault(__webpack_require__(6545));
+const core = __importStar(__webpack_require__(2186));
 const IN_REVIEW = '81';
 const ACTIVE_SPRINT_FIELD = 'customfield_10122';
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -146,6 +166,7 @@ const createJiraApiInstance = (host, token) => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const createTicket = (params) => __awaiter(void 0, void 0, void 0, function* () {
         const payload = createTicketPayload(params);
+        core.debug(`Creating ticket: ${JSON.stringify(payload, null, 2)}`);
         const response = yield post(`${host}/rest/api/3/issue`, payload);
         return response.data.key;
     });
@@ -214,6 +235,7 @@ function run() {
                 core.setFailed(`Failure: no active sprints`);
                 return;
             }
+            core.debug(`Active sprint: ${activeSprint.id}`);
             const pullRequestDetails = github_1.getPullReqestDetails();
             const createdTicket = yield createTicket({
                 activeSprintId: activeSprint.id,
@@ -221,6 +243,7 @@ function run() {
                 summary: pullRequestDetails.title,
                 pullRequestUrl: pullRequestDetails.html_url || ''
             });
+            core.debug(`Created ticket: ${createdTicket}`);
             const octokit = github.getOctokit(GITHUB_TOKEN);
             yield octokit.pulls.update({
                 owner: pullRequestDetails.owner,

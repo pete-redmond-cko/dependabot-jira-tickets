@@ -27,6 +27,8 @@ async function run(): Promise<void> {
       return
     }
 
+    core.debug(`Active sprint: ${activeSprint.id}`)
+
     const pullRequestDetails = getPullReqestDetails()
 
     const createdTicket = await createTicket({
@@ -35,6 +37,8 @@ async function run(): Promise<void> {
       summary: pullRequestDetails.title,
       pullRequestUrl: pullRequestDetails.html_url || ''
     })
+
+    core.debug(`Created ticket: ${createdTicket}`)
 
     const octokit = github.getOctokit(GITHUB_TOKEN)
 

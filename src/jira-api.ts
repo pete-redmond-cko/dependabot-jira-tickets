@@ -1,4 +1,5 @@
 import axios from 'axios'
+import * as core from '@actions/core'
 
 type ActiveSprint = {
   id: string
@@ -135,6 +136,8 @@ export const createJiraApiInstance = (host: string, token: string) => {
     pullRequestUrl: string
   }) => {
     const payload = createTicketPayload(params)
+
+    core.debug(`Creating ticket: ${JSON.stringify(payload, null, 2)}`)
 
     const response = await post<typeof payload, {key: string}>(
       `${host}/rest/api/3/issue`,
