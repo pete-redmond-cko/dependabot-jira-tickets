@@ -152,7 +152,6 @@ const createJiraApiInstance = (host, token) => {
     return {
         getActiveSprint,
         createTicket
-        // createTicket: () => {}
     };
 };
 exports.createJiraApiInstance = createJiraApiInstance;
@@ -205,6 +204,9 @@ function run() {
         const JIRA_BOARD_ID = core.getInput('JIRA_BOARD_ID', { required: true });
         const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN', { required: true });
         const JIRA_PROJECT_KEY = core.getInput('JIRA_PROJECT_KEY', { required: true });
+        if (github.context.ref.startsWith('dependabot/')) {
+            return;
+        }
         try {
             const { getActiveSprint, createTicket } = jira_api_1.createJiraApiInstance(JIRA_HOST, JIRA_API_TOKEN);
             const activeSprint = yield getActiveSprint(JIRA_BOARD_ID);
