@@ -225,8 +225,10 @@ function run() {
         const JIRA_BOARD_ID = core.getInput('JIRA_BOARD_ID', { required: true });
         const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN', { required: true });
         const JIRA_PROJECT_KEY = core.getInput('JIRA_PROJECT_KEY', { required: true });
-        core.debug(`Ref -> ${github.context.ref}`);
-        if (!github.context.ref.startsWith('dependabot/')) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const GITHUB_REF = process.env.GITHUB_REF;
+        core.debug(`Ref -> ${GITHUB_REF}`);
+        if (!GITHUB_REF.startsWith('dependabot/')) {
             return;
         }
         try {
