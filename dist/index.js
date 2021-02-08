@@ -226,7 +226,7 @@ function run() {
         const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN', { required: true });
         const JIRA_PROJECT_KEY = core.getInput('JIRA_PROJECT_KEY', { required: true });
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const GITHUB_REF = process.env.GITHUB_REF;
+        const GITHUB_REF = process.env.GITHUB_HEAD_REF;
         core.debug(`Ref -> ${GITHUB_REF}`);
         if (!GITHUB_REF.startsWith('dependabot/')) {
             return;
