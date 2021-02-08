@@ -124,7 +124,7 @@ const createTicketPayload = ({ projectKey, activeSprintId, summary, pullRequestU
             IssueTransition: {
                 id: IN_REVIEW
             },
-            [ACTIVE_SPRINT_FIELD]: activeSprintId
+            [ACTIVE_SPRINT_FIELD]: activeSprintId.toString()
         }
     };
     return issue;
@@ -167,8 +167,13 @@ const createJiraApiInstance = (host, token) => {
     const createTicket = (params) => __awaiter(void 0, void 0, void 0, function* () {
         const payload = createTicketPayload(params);
         core.debug(`Creating ticket: ${JSON.stringify(payload, null, 2)}`);
-        const response = yield post(`${host}/rest/api/3/issue`, payload);
-        return response.data.key;
+        try {
+            const response = yield post(`${host}/rest/api/3/issue`, payload);
+            return response.data.key;
+        }
+        catch (e) {
+            core.debug(e);
+        }
     });
     return {
         getActiveSprint,

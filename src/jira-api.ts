@@ -75,7 +75,7 @@ const createTicketPayload = ({
       IssueTransition: {
         id: IN_REVIEW
       },
-      [ACTIVE_SPRINT_FIELD]: activeSprintId
+      [ACTIVE_SPRINT_FIELD]: activeSprintId.toString()
     }
   }
 
@@ -139,12 +139,16 @@ export const createJiraApiInstance = (host: string, token: string) => {
 
     core.debug(`Creating ticket: ${JSON.stringify(payload, null, 2)}`)
 
-    const response = await post<typeof payload, {key: string}>(
-      `${host}/rest/api/3/issue`,
-      payload
-    )
+    try {
+      const response = await post<typeof payload, {key: string}>(
+        `${host}/rest/api/3/issue`,
+        payload
+      )
 
-    return response.data.key
+      return response.data.key
+    } catch (e) {
+      core.debug(e)
+    }
   }
 
   return {
