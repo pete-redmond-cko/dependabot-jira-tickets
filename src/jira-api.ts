@@ -147,6 +147,5 @@ export const createJiraApiInstance = (host: string, token: string) => {
   return {
     getActiveSprint,
     createTicket
-    // createTicket: () => {}
   }
 }
