@@ -72,10 +72,7 @@ const createTicketPayload = ({
       issuetype: {
         name: 'Task'
       },
-      IssueTransition: {
-        id: IN_REVIEW
-      },
-      [ACTIVE_SPRINT_FIELD]: activeSprintId.toString()
+      [ACTIVE_SPRINT_FIELD]: activeSprintId
     }
   }
 
@@ -146,10 +143,8 @@ export const createJiraApiInstance = (host: string, token: string) => {
       )
 
       return response.data.key
-    } catch (error) {
-      core.debug(error.response?.data)
-      core.debug(error.response?.status)
-      core.debug(error.response?.headers)
+    } catch (e) {
+      core.debug(e)
     }
   }
 

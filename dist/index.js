@@ -121,10 +121,7 @@ const createTicketPayload = ({ projectKey, activeSprintId, summary, pullRequestU
             issuetype: {
                 name: 'Task'
             },
-            IssueTransition: {
-                id: IN_REVIEW
-            },
-            [ACTIVE_SPRINT_FIELD]: activeSprintId.toString()
+            [ACTIVE_SPRINT_FIELD]: activeSprintId
         }
     };
     return issue;
@@ -165,17 +162,14 @@ const createJiraApiInstance = (host, token) => {
     });
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const createTicket = (params) => __awaiter(void 0, void 0, void 0, function* () {
-        var _b, _c, _d;
         const payload = createTicketPayload(params);
         core.debug(`Creating ticket: ${JSON.stringify(payload, null, 2)}`);
         try {
             const response = yield post(`${host}/rest/api/3/issue`, payload);
             return response.data.key;
         }
-        catch (error) {
-            core.debug((_b = error.response) === null || _b === void 0 ? void 0 : _b.data);
-            core.debug((_c = error.response) === null || _c === void 0 ? void 0 : _c.status);
-            core.debug((_d = error.response) === null || _d === void 0 ? void 0 : _d.headers);
+        catch (e) {
+            core.debug(e);
         }
     });
     return {
@@ -227,6 +221,7 @@ const github = __importStar(__webpack_require__(5438));
 const jira_api_1 = __webpack_require__(2742);
 const github_1 = __webpack_require__(5928);
 function run() {
+    var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
         const JIRA_HOST = core.getInput('JIRA_HOST', { required: true });
         const JIRA_API_TOKEN = core.getInput('JIRA_API_TOKEN', { required: true });
@@ -264,8 +259,11 @@ function run() {
                 title: `${createdTicket} - ${pullRequestDetails.title}`
             });
         }
-        catch (err) {
-            core.setFailed(`Failure: ${err.message}`);
+        catch (error) {
+            core.setFailed(`Failure: ${error.message}`);
+            core.debug((_a = error.response) === null || _a === void 0 ? void 0 : _a.data);
+            core.debug((_b = error.response) === null || _b === void 0 ? void 0 : _b.status);
+            core.debug((_c = error.response) === null || _c === void 0 ? void 0 : _c.headers);
         }
     });
 }

@@ -54,8 +54,12 @@ async function run(): Promise<void> {
       body: pullRequestDetails.body,
       title: `${createdTicket} - ${pullRequestDetails.title}`
     })
-  } catch (err) {
-    core.setFailed(`Failure: ${err.message}`)
+  } catch (error) {
+    core.setFailed(`Failure: ${error.message}`)
+
+    core.debug(error.response?.data)
+    core.debug(error.response?.status)
+    core.debug(error.response?.headers)
   }
 }
 
