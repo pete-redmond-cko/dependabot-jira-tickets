@@ -10,7 +10,7 @@ async function run(): Promise<void> {
   const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN', {required: true})
   const JIRA_PROJECT_KEY = core.getInput('JIRA_PROJECT_KEY', {required: true})
 
-  if (github.context.ref.startsWith('dependabot/')) {
+  if (!github.context.ref.startsWith('dependabot/')) {
     return
   }
 

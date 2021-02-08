@@ -204,7 +204,7 @@ function run() {
         const JIRA_BOARD_ID = core.getInput('JIRA_BOARD_ID', { required: true });
         const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN', { required: true });
         const JIRA_PROJECT_KEY = core.getInput('JIRA_PROJECT_KEY', { required: true });
-        if (github.context.ref.startsWith('dependabot/')) {
+        if (!github.context.ref.startsWith('dependabot/')) {
             return;
         }
         try {
