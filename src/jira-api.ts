@@ -142,6 +142,10 @@ export const createJiraApiInstance = (host: string, token: string) => {
         payload
       )
 
+      await post(`${host}/rest/api/3/issue/${response.data.key}/transitions`, {
+        transition: {id: IN_REVIEW}
+      })
+
       return response.data.key
     } catch (e) {
       core.debug(e)

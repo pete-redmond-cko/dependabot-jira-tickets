@@ -166,6 +166,9 @@ const createJiraApiInstance = (host, token) => {
         core.debug(`Creating ticket: ${JSON.stringify(payload, null, 2)}`);
         try {
             const response = yield post(`${host}/rest/api/3/issue`, payload);
+            yield post(`${host}/rest/api/3/issue/${response.data.key}/transitions`, {
+                transition: { id: IN_REVIEW }
+            });
             return response.data.key;
         }
         catch (e) {
