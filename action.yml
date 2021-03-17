@@ -1,19 +1,27 @@
 name: 'Peter Redmond'
-description: ''
+description: 'Automagically create a JIRA issue for a Dependabot PR'
 author: 'cko-prism'
 inputs:
   JIRA_HOST:
     required: true
-    description: 'JIRA host eg (https://checkout.atlassian.net)'
+    description: 'JIRA host (eg. https://checkout.atlassian.net)'
   JIRA_API_TOKEN:
     required: true
-    description: 'JIRA API token'
+    description: 'JIRA API token (create one at https://id.atlassian.com/manage-profile/security/api-tokens)'
   JIRA_BOARD_ID:
     required: true
-    description: 'ID of the board you want to add the JIRA ticket too'
+    description: 'ID of the board you want to add the JIRA ticket to (eg. 168)'
   JIRA_PROJECT_KEY:
     required: true
-    description: 'Key of the project you want to add the jira ticket to eg PRISM'
+    description: 'Key of the project you want to add the JIRA ticket to (eg. PRISM)'
+  JIRA_TRANSITION_ID:
+    required: true
+    description: 'Transition ID to put the JIRA ticket in the right column (eg. 81)'
+    default: '81'
+  JIRA_ACTIVE_SPRINT_FIELD:
+    required: true
+    description: 'The custom field that displays the current, active sprint of the project (eg. customfield_10122)'
+    default: 'customfield_10122'
   GITHUB_TOKEN:
     required: true
     description: ''

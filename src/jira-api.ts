@@ -20,17 +20,16 @@ type SprintResponse = {
   values: ActiveSprint[]
 }
 
-const IN_REVIEW = '81'
-const ACTIVE_SPRINT_FIELD = 'customfield_10122'
-
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const createTicketPayload = ({
   projectKey,
+  activeSprintField,
   activeSprintId,
   summary,
   pullRequestUrl
 }: {
   projectKey: string
+  activeSprintField: string
   activeSprintId: string
   summary: string
   pullRequestUrl: string
@@ -72,7 +71,7 @@ const createTicketPayload = ({
       issuetype: {
         name: 'Task'
       },
-      [ACTIVE_SPRINT_FIELD]: activeSprintId
+      [activeSprintField]: activeSprintId
     }
   }
 
@@ -129,6 +128,8 @@ export const createJiraApiInstance = (host: string, token: string) => {
   const createTicket = async (params: {
     projectKey: string
     activeSprintId: string
+    activeSprintField: string
+    transitionId: string
     summary: string
     pullRequestUrl: string
   }) => {
@@ -143,7 +144,7 @@ export const createJiraApiInstance = (host: string, token: string) => {
       )
 
       await post(`${host}/rest/api/3/issue/${response.data.key}/transitions`, {
-        transition: {id: IN_REVIEW}
+        transition: {id: params.transitionId}
       })
 
       return response.data.key
