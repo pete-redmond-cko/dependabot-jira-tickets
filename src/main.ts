@@ -15,6 +15,7 @@ async function run(): Promise<void> {
   })
   const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN', {required: true})
   const JIRA_PROJECT_KEY = core.getInput('JIRA_PROJECT_KEY', {required: true})
+  const JIRA_LABELS = core.getInput('JIRA_LABELS').split(',')
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const GITHUB_REF = process.env.GITHUB_HEAD_REF!
@@ -48,7 +49,8 @@ async function run(): Promise<void> {
       transitionId: JIRA_TRANSITION_ID,
       projectKey: JIRA_PROJECT_KEY,
       summary: pullRequestDetails.title,
-      pullRequestUrl: pullRequestDetails.html_url || ''
+      pullRequestUrl: pullRequestDetails.html_url || '',
+      labels: JIRA_LABELS
     })
 
     core.debug(`Created ticket: ${createdTicket}`)

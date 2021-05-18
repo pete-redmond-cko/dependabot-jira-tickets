@@ -81,15 +81,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createJiraApiInstance = void 0;
 const axios_1 = __importDefault(__webpack_require__(6545));
 const core = __importStar(__webpack_require__(2186));
-const IN_REVIEW = '81';
-const ACTIVE_SPRINT_FIELD = 'customfield_10122';
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const createTicketPayload = ({ projectKey, activeSprintId, summary, pullRequestUrl }) => {
+const createTicketPayload = ({ projectKey, activeSprintField, activeSprintId, summary, pullRequestUrl, labels }) => {
     const issue = {
         fields: {
             project: {
                 key: projectKey
             },
+            labels,
             summary,
             description: {
                 type: 'doc',
@@ -121,7 +120,7 @@ const createTicketPayload = ({ projectKey, activeSprintId, summary, pullRequestU
             issuetype: {
                 name: 'Task'
             },
-            [ACTIVE_SPRINT_FIELD]: activeSprintId
+            [activeSprintField]: activeSprintId
         }
     };
     return issue;
@@ -167,7 +166,7 @@ const createJiraApiInstance = (host, token) => {
         try {
             const response = yield post(`${host}/rest/api/3/issue`, payload);
             yield post(`${host}/rest/api/3/issue/${response.data.key}/transitions`, {
-                transition: { id: IN_REVIEW }
+                transition: { id: params.transitionId }
             });
             return response.data.key;
         }
@@ -229,8 +228,15 @@ function run() {
         const JIRA_HOST = core.getInput('JIRA_HOST', { required: true });
         const JIRA_API_TOKEN = core.getInput('JIRA_API_TOKEN', { required: true });
         const JIRA_BOARD_ID = core.getInput('JIRA_BOARD_ID', { required: true });
+        const JIRA_TRANSITION_ID = core.getInput('JIRA_TRANSITION_ID', {
+            required: true
+        });
+        const JIRA_ACTIVE_SPRINT_FIELD = core.getInput('JIRA_ACTIVE_SPRINT_FIELD', {
+            required: true
+        });
         const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN', { required: true });
         const JIRA_PROJECT_KEY = core.getInput('JIRA_PROJECT_KEY', { required: true });
+        const JIRA_LABELS = core.getInput('JIRA_LABELS').split(',');
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const GITHUB_REF = process.env.GITHUB_HEAD_REF;
         core.debug(`Ref -> ${GITHUB_REF}`);
@@ -248,9 +254,12 @@ function run() {
             const pullRequestDetails = github_1.getPullReqestDetails();
             const createdTicket = yield createTicket({
                 activeSprintId: activeSprint.id,
+                activeSprintField: JIRA_ACTIVE_SPRINT_FIELD,
+                transitionId: JIRA_TRANSITION_ID,
                 projectKey: JIRA_PROJECT_KEY,
                 summary: pullRequestDetails.title,
-                pullRequestUrl: pullRequestDetails.html_url || ''
+                pullRequestUrl: pullRequestDetails.html_url || '',
+                labels: JIRA_LABELS
             });
             core.debug(`Created ticket: ${createdTicket}`);
             const octokit = github.getOctokit(GITHUB_TOKEN);
