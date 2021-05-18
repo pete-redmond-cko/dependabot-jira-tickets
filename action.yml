@@ -22,6 +22,10 @@ inputs:
     required: true
     description: 'The custom field that displays the current, active sprint of the project (eg. customfield_10122)'
     default: 'customfield_10122'
+  JIRA_LABELS:
+    required: false
+    description: "List of labels to add to the JIRA ticket (eg. 'No_QA_Required,Automated')"
+    default: ''
   GITHUB_TOKEN:
     required: true
     description: ''

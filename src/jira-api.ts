@@ -26,19 +26,22 @@ const createTicketPayload = ({
   activeSprintField,
   activeSprintId,
   summary,
-  pullRequestUrl
+  pullRequestUrl,
+  labels
 }: {
   projectKey: string
   activeSprintField: string
   activeSprintId: string
   summary: string
   pullRequestUrl: string
+  labels: string[]
 }) => {
   const issue = {
     fields: {
       project: {
         key: projectKey
       },
+      labels,
       summary,
       description: {
         type: 'doc',
@@ -132,6 +135,7 @@ export const createJiraApiInstance = (host: string, token: string) => {
     transitionId: string
     summary: string
     pullRequestUrl: string
+    labels: string[]
   }) => {
     const payload = createTicketPayload(params)
 
